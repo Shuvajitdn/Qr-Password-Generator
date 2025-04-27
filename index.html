@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Hub - QR Code & Password Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <main class="container">
+        <div class="header">
+            <h1 class="title">Generator Hub</h1>
+            <div class="theme-toggle">
+                <input type="checkbox" id="theme-toggle-checkbox" class="theme-toggle-checkbox">
+                <label for="theme-toggle-checkbox" class="theme-toggle-label">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                    <div class="ball"></div>
+                </label>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="qrcode">QR Code Generator</button>
+                <button class="tab-btn" data-tab="password">Password Generator</button>
+            </div>
+
+            <!-- QR Code Generator Tab -->
+            <div class="tab-content active" id="qrcode-tab">
+                <div class="grid-container">
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label for="text" class="form-label">Text or URL</label>
+                            <input type="text" id="text" class="form-input" placeholder="Enter text or URL">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="size" class="form-label">Size: <span id="size-value">200</span>px</label>
+                            <input type="range" id="size" class="form-slider" min="100" max="500" step="10" value="200">
+                        </div>
+
+                        <div class="color-grid">
+                            <div class="form-group">
+                                <label for="color" class="form-label">QR Color</label>
+                                <div class="color-picker-container">
+                                    <div class="color-preview" id="color-preview"></div>
+                                    <input type="color" id="color" class="form-color" value="#000000">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="bg-color" class="form-label">Background</label>
+                                <div class="color-picker-container">
+                                    <div class="color-preview" id="bg-color-preview"></div>
+                                    <input type="color" id="bg-color" class="form-color" value="#FFFFFF">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="logo-upload" class="form-label">Add Logo (Optional)</label>
+                            <input type="file" id="logo-upload" class="form-input" accept="image/*">
+                        </div>
+
+                        <div class="button-group">
+                            <button id="generate-qr" class="btn btn-primary">Generate QR Code</button>
+                            <button id="download-qr" class="btn btn-outline" disabled>
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="preview-section">
+                        <div id="qr-preview" class="preview-container">
+                            <div class="placeholder-text">
+                                <p>Your QR code will appear here</p>
+                                <p class="small-text">Fill in the form and click Generate</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QR Code History Section -->
+                <div class="history-card">
+                    <div class="history-header">
+                        <h3>History</h3>
+                        <button id="clear-qr-history" class="btn-clear" style="display: none;">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                    </div>
+                    <p class="history-description">Your recently generated QR codes</p>
+                    <div id="qr-history" class="history-container">
+                        <p class="empty-history">No history yet. Generate some QR codes!</p>
+                    </div>
+                </div>
+
+                <!-- Export/Import Section -->
+                <div class="export-import-section">
+                    <h3>Export/Import History</h3>
+                    <div class="button-group">
+                        <button id="export-qr-history" class="btn btn-sm">Export History</button>
+                        <label for="import-qr-file" class="btn btn-sm btn-outline">Import History</label>
+                        <input type="file" id="import-qr-file" accept=".json" style="display: none;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Password Generator Tab -->
+            <div class="tab-content" id="password-tab">
+                <div class="grid-container">
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label for="password-length" class="form-label">Password Length: <span id="length-value">12</span> characters</label>
+                            <input type="range" id="password-length" class="form-slider" min="4" max="32" step="1" value="12">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Character Types</label>
+                            <div class="checkbox-grid">
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="uppercase" class="form-checkbox" checked>
+                                    <label for="uppercase">Uppercase (A-Z)</label>
+                                </div>
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="lowercase" class="form-checkbox" checked>
+                                    <label for="lowercase">Lowercase (a-z)</label>
+                                </div>
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="numbers" class="form-checkbox" checked>
+                                    <label for="numbers">Numbers (0-9)</label>
+                                </div>
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="symbols" class="form-checkbox" checked>
+                                    <label for="symbols">Symbols (!@#$%)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Password Requirements</label>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="min-requirements" class="form-checkbox">
+                                <label for="min-requirements">Enforce minimum requirements</label>
+                            </div>
+                            <div id="requirements-details" class="requirements-details" style="display: none;">
+                                <div class="requirement">
+                                    <i class="fas fa-check-circle req-icon" id="req-length"></i>
+                                    <span>At least 8 characters</span>
+                                </div>
+                                <div class="requirement">
+                                    <i class="fas fa-check-circle req-icon" id="req-uppercase"></i>
+                                    <span>At least 1 uppercase letter</span>
+                                </div>
+                                <div class="requirement">
+                                    <i class="fas fa-check-circle req-icon" id="req-lowercase"></i>
+                                    <span>At least 1 lowercase letter</span>
+                                </div>
+                                <div class="requirement">
+                                    <i class="fas fa-check-circle req-icon" id="req-number"></i>
+                                    <span>At least 1 number</span>
+                                </div>
+                                <div class="requirement">
+                                    <i class="fas fa-check-circle req-icon" id="req-symbol"></i>
+                                    <span>At least 1 special character</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button id="generate-password" class="btn btn-primary btn-pink">Generate Password</button>
+                            <button id="copy-password" class="btn btn-outline" disabled>
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+
+                        <div class="form-group">
+                            <button id="auto-suggest" class="btn btn-full">
+                                <i class="fas fa-magic"></i> Auto-Suggest Secure Password
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="preview-section">
+                        <div class="password-preview-container">
+                            <div class="password-field-container">
+                                <input type="password" id="password-display" class="password-display" readonly placeholder="Your password will appear here">
+                                <button id="toggle-visibility" class="toggle-visibility" disabled>
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div id="strength-meter-container" class="strength-meter-container" style="display: none;">
+                                <div class="strength-label">
+                                    <div id="strength-icon" class="strength-icon">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <span id="strength-text">Weak</span>
+                                    <span id="strength-percentage" class="strength-percentage">0%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div id="strength-progress" class="progress-indicator"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password History Section -->
+                <div class="history-card">
+                    <div class="history-header">
+                        <h3>Password History</h3>
+                        <button id="clear-password-history" class="btn-clear" style="display: none;">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                    </div>
+                    <p class="history-description">Your recently generated passwords</p>
+                    <div id="password-history" class="history-container">
+                        <p class="empty-history">No history yet. Generate some passwords!</p>
+                    </div>
+                </div>
+
+                <!-- Export/Import Section -->
+                <div class="export-import-section">
+                    <h3>Export/Import History</h3>
+                    <div class="button-group">
+                        <button id="export-password-history" class="btn btn-sm">Export History</button>
+                        <label for="import-password-file" class="btn btn-sm btn-outline">Import History</label>
+                        <input type="file" id="import-password-file" accept=".json" style="display: none;">
+                    </div>
+                </div>
+
+                <!-- Password Categories -->
+                <div class="categories-section">
+                    <h3>Password Categories</h3>
+                    <div class="categories-container">
+                        <div class="category-item" data-category="social">
+                            <i class="fas fa-users"></i>
+                            <span>Social</span>
+                        </div>
+                        <div class="category-item" data-category="banking">
+                            <i class="fas fa-university"></i>
+                            <span>Banking</span>
+                        </div>
+                        <div class="category-item" data-category="email">
+                            <i class="fas fa-envelope"></i>
+                            <span>Email</span>
+                        </div>
+                        <div class="category-item" data-category="shopping">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Shopping</span>
+                        </div>
+                        <div class="category-item" data-category="work">
+                            <i class="fas fa-briefcase"></i>
+                            <span>Work</span>
+                        </div>
+                        <div class="category-item" data-category="other">
+                            <i class="fas fa-ellipsis-h"></i>
+                            <span>Other</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>© <span id="current-year"></span> Generator Hub. All rights reserved.</p>
+        </footer>
+    </main>
+
+    <!-- Toast container for notifications -->
+    <div class="toast-container"></div>
+
+    <!-- QR Code library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
